@@ -17,10 +17,6 @@ kadai-a() {
             warn "kadai-a: missing Makefile."
         fi
         
-        if [ -f kadai-a ]; then
-            warn "kadai-a: Do not include the binary(kadai-a) in your submissions!"  
-        fi
-
         make kadai-a > /dev/null 2>&1
 
         if [ ! -f kadai-a ]; then
