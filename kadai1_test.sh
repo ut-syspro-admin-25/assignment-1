@@ -1,7 +1,7 @@
 #!/bin/bash
 # Test code for syspro2024 kadai1
 # Written by Shinichi Awamoto
-# Edited by Momoko Shiraishi
+# Edited by Momoko Shiraishi, Guojun Wu
 
 state=0
 warn() { echo $1; state=1; }
@@ -16,8 +16,11 @@ kadai-a() {
         if [ ! -f Makefile ]; then
             warn "kadai-a: missing Makefile."
         fi
-        
-        make kadai-a > /dev/null 2>&1
+
+        make kadai-a 2>&1 | grep -i "warning" > /dev/null
+        if [ $? -eq 0 ]; then
+            warn "kadai-a: '$ make kadai-a' produced warnings."
+        fi
 
         if [ ! -f kadai-a ]; then
             warn "kadai-a: Failed to generate the binary(kadai-a) with '$ make kadai-a'"
@@ -58,6 +61,13 @@ kadai-b() {
             warn "kadai-b: Failed to generate 'result.txt' with '$ ./sort.sh'."
         elif [ `cat result.txt | wc -l` -eq 0 ]; then
             warn "kadai-b: 'result.txt' is empty!"
+        else
+            while read line; do
+                if echo $line | grep -q " "; then
+                    warn "kadai-b: the number of lines seems to be included."
+                    break
+                fi
+            done < result.txt
         fi
 
         popd > /dev/null 2>&1
@@ -72,7 +82,7 @@ kadai-c() {
         pushd $dir/kadai-c > /dev/null 2>&1
 
         original="original.pdf"
-        
+
         if [ ! -f concatenation.sh ]; then
             warn "kadai-c: Missing 'concatenation.sh'."
         fi
